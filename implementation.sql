@@ -5,7 +5,7 @@ USE bigdb;
 #import the csv files
 
 
-
+#creating a temporary table
 CREATE TEMPORARY TABLE my_table AS
 SELECT t1.`country/region` AS matching, population FROM whole_data t1 
 JOIN group_data t2
@@ -13,7 +13,7 @@ ON t1.`country/region` = t2.`country/region`;
 
 SELECT * FROM my_table; #temporary table view
 
-#Join more than 4 tables
+#view 4 tables
 
 
 SELECT * FROM day_wise;
@@ -53,8 +53,9 @@ JOIN group_data t4 ON t3.`Country/Region` = t4.`Country/Region`
 JOIN clean_data t5 ON t4.`Country/Region` = t5.`Country/Region`;
 
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` FUNCTION `new_function`() RETURNS int
-    READS SQL DATA
+CREATE FUNCTION `new_function`()
+RETURNS int
+READS SQL DATA
 BEGIN
     DECLARE population INT;
 
@@ -83,6 +84,11 @@ END$$
 DELIMITER ;
 
 
+SELECT *
+FROM clean_data AS cd
+JOIN group_data AS gd ON cd.`Country/Region` = gd.`Country/Region`
+JOIN usa_wise AS uw ON cd.`Country/Region` = uw.`Country_Region`
+JOIN whole_data AS wd ON cd.`Country/Region` = wd.`Country/Region`;
 
 
 
