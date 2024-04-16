@@ -20,12 +20,12 @@ VALUES
 'hemant', 2000, 100
 );
 
-SELECT * FROM employee;
+
 
 
 #This trigger is used to assign salaries to the employees as soon as the new row is being created.
 DELIMITER //
-CREATE TRIGGER salary_trgr
+CREATE TRIGGER salary_trgr_insert
 BEFORE INSERT
 ON employee FOR EACH ROW
 BEGIN
@@ -34,7 +34,20 @@ END; //
 
 DELIMITER ;
 
+DELIMITER //
+-- Trigger to recalculate salary when working_hours or per_hr_salary is updated
+CREATE TRIGGER salary_trgr_update
+BEFORE UPDATE
+ON employee FOR EACH ROW
+BEGIN
+	SET NEW.salary = NEW.per_hr_salary * NEW.working_hours;
+END; //
+DELIMITER ;
 
+-- Update working_hours or per_hr_salary to trigger the salary recalculation
+UPDATE employee SET working_hours = 2300 WHERE name = 'hemant';
+
+SELECT * FROM employee;
 DROP TRIGGER salary_trgr;
 
 DELETE FROM employee
